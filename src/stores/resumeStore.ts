@@ -25,6 +25,11 @@ export const useResumeStore = defineStore('resume', {
       projects: []
     }),
     activeTemplate: useStorage('active-template', 'modern'),
+    templateSettings: useStorage('template-settings', {
+      primaryColor: '#4F46E5',
+      fontFamily: 'Inter',
+      fontSize: 'medium'
+    }),
     currentStep: 1,
     isSaving: false
   }),
@@ -92,7 +97,6 @@ export const useResumeStore = defineStore('resume', {
 
     autoSave() {
       this.isSaving = true
-      // The useStorage automatically saves to localStorage
       setTimeout(() => {
         this.isSaving = false
       }, 500)
@@ -102,27 +106,28 @@ export const useResumeStore = defineStore('resume', {
       this.activeTemplate = template
     },
 
-    // ✅ UPDATED: Changed from 5 to 6
+    updateTemplateSettings(settings) {
+      this.templateSettings = { ...this.templateSettings, ...settings }
+    },
+
     setStep(step) {
       if (step >= 1 && step <= 6) {
         this.currentStep = step
-        console.log('Step set to:', step) // Debug log
+        console.log('Step set to:', step)
       }
     },
 
-    // ✅ UPDATED: Changed from 5 to 6
     nextStep() {
       if (this.currentStep < 6) {
         this.currentStep++
-        console.log('Next step:', this.currentStep) // Debug log
+        console.log('Next step:', this.currentStep)
       }
     },
 
-    // ✅ FIXED: Added validation
     prevStep() {
       if (this.currentStep > 1) {
         this.currentStep--
-        console.log('Previous step:', this.currentStep) // Debug log
+        console.log('Previous step:', this.currentStep)
       }
     },
 
@@ -148,29 +153,24 @@ export const useResumeStore = defineStore('resume', {
       let total = 0
       let filled = 0
       
-      // Personal info
       const personalFields = Object.values(state.data.personal)
       total += personalFields.length
       filled += personalFields.filter(v => v !== '').length
       
-      // Experience
       if (state.data.experience.length > 0) total++
       if (state.data.experience.length > 0) filled++
       
-      // Education
       if (state.data.education.length > 0) total++
       if (state.data.education.length > 0) filled++
       
-      // Skills
       const allSkills = [...state.data.skills.technical, ...state.data.skills.soft, ...state.data.skills.languages]
       if (allSkills.length > 0) total++
       if (allSkills.length > 0) filled++
       
-      // Projects
       if (state.data.projects.length > 0) total++
       if (state.data.projects.length > 0) filled++
       
-      return Math.round((filled / total) * 100)
+      return Math.round((filled / total) * 100) || 0
     }
   }
 })
