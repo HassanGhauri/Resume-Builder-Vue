@@ -102,15 +102,17 @@ export const useResumeStore = defineStore('resume', {
       this.activeTemplate = template
     },
 
+    // ✅ UPDATED: Changed from 5 to 6
     setStep(step) {
-      if (step >= 1 && step <= 5) {
+      if (step >= 1 && step <= 6) {
         this.currentStep = step
+        console.log('Step set to:', step) // Debug log
       }
     },
 
-    // ✅ FIXED: Changed from 4 to 5
+    // ✅ UPDATED: Changed from 5 to 6
     nextStep() {
-      if (this.currentStep < 5) {
+      if (this.currentStep < 6) {
         this.currentStep++
         console.log('Next step:', this.currentStep) // Debug log
       }
