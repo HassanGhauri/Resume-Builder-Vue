@@ -103,15 +103,25 @@ export const useResumeStore = defineStore('resume', {
     },
 
     setStep(step) {
-      this.currentStep = step
+      if (step >= 1 && step <= 5) {
+        this.currentStep = step
+      }
     },
 
+    // ✅ FIXED: Changed from 4 to 5
     nextStep() {
-      if (this.currentStep < 4) this.currentStep++
+      if (this.currentStep < 5) {
+        this.currentStep++
+        console.log('Next step:', this.currentStep) // Debug log
+      }
     },
 
+    // ✅ FIXED: Added validation
     prevStep() {
-      if (this.currentStep > 1) this.currentStep--
+      if (this.currentStep > 1) {
+        this.currentStep--
+        console.log('Previous step:', this.currentStep) // Debug log
+      }
     },
 
     resetResume() {
@@ -153,6 +163,10 @@ export const useResumeStore = defineStore('resume', {
       const allSkills = [...state.data.skills.technical, ...state.data.skills.soft, ...state.data.skills.languages]
       if (allSkills.length > 0) total++
       if (allSkills.length > 0) filled++
+      
+      // Projects
+      if (state.data.projects.length > 0) total++
+      if (state.data.projects.length > 0) filled++
       
       return Math.round((filled / total) * 100)
     }

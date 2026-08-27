@@ -1,12 +1,12 @@
 <!-- src/components/builder/SkillsForm.vue -->
 <template>
   <div>
-    <h2 class="text-2xl font-bold mb-6">Skills</h2>
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Skills</h2>
 
     <div class="grid md:grid-cols-2 gap-6">
       <!-- Technical Skills -->
-      <div class="border border-gray-200 rounded-lg p-6">
-        <h3 class="font-semibold text-lg mb-4 flex items-center">
+      <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+        <h3 class="font-semibold text-lg mb-4 flex items-center text-gray-900 dark:text-white">
           <span class="text-blue-600 mr-2">💻</span> Technical Skills
         </h3>
         
@@ -14,10 +14,10 @@
           <span 
             v-for="(skill, index) in store.data.skills.technical" 
             :key="index"
-            class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center"
+            class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm flex items-center"
           >
             {{ skill }}
-            <button @click="removeSkill('technical', index)" class="ml-2 text-blue-600 hover:text-blue-800">
+            <button @click="removeSkill('technical', index)" class="ml-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
               ×
             </button>
           </span>
@@ -37,13 +37,13 @@
         </div>
         
         <div class="mt-3">
-          <p class="text-xs text-gray-500">Press Enter or click Add to add a skill</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Press Enter or click Add to add a skill</p>
         </div>
       </div>
 
       <!-- Soft Skills -->
-      <div class="border border-gray-200 rounded-lg p-6">
-        <h3 class="font-semibold text-lg mb-4 flex items-center">
+      <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+        <h3 class="font-semibold text-lg mb-4 flex items-center text-gray-900 dark:text-white">
           <span class="text-green-600 mr-2">🤝</span> Soft Skills
         </h3>
         
@@ -51,10 +51,10 @@
           <span 
             v-for="(skill, index) in store.data.skills.soft" 
             :key="index"
-            class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm flex items-center"
+            class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full text-sm flex items-center"
           >
             {{ skill }}
-            <button @click="removeSkill('soft', index)" class="ml-2 text-green-600 hover:text-green-800">
+            <button @click="removeSkill('soft', index)" class="ml-2 text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300">
               ×
             </button>
           </span>
@@ -74,13 +74,13 @@
         </div>
         
         <div class="mt-3">
-          <p class="text-xs text-gray-500">Press Enter or click Add to add a skill</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Press Enter or click Add to add a skill</p>
         </div>
       </div>
 
       <!-- Languages -->
-      <div class="md:col-span-2 border border-gray-200 rounded-lg p-6">
-        <h3 class="font-semibold text-lg mb-4 flex items-center">
+      <div class="md:col-span-2 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+        <h3 class="font-semibold text-lg mb-4 flex items-center text-gray-900 dark:text-white">
           <span class="text-purple-600 mr-2">🌐</span> Languages
         </h3>
         
@@ -88,10 +88,10 @@
           <span 
             v-for="(lang, index) in store.data.skills.languages" 
             :key="index"
-            class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm flex items-center"
+            class="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-3 py-1 rounded-full text-sm flex items-center"
           >
             {{ lang }}
-            <button @click="removeSkill('languages', index)" class="ml-2 text-purple-600 hover:text-purple-800">
+            <button @click="removeSkill('languages', index)" class="ml-2 text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300">
               ×
             </button>
           </span>
@@ -111,20 +111,24 @@
         </div>
         
         <div class="mt-3">
-          <p class="text-xs text-gray-500">Press Enter or click Add to add a language</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Press Enter or click Add to add a language</p>
         </div>
       </div>
     </div>
 
-    <!-- Skill Suggestions -->
-    <div class="mt-6 p-4 bg-gray-50 rounded-lg">
-      <h4 class="font-medium text-sm text-gray-600 mb-2">Popular Skills Suggestions:</h4>
+    <!-- Skill Suggestions - FIXED for dark mode -->
+    <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+      <h4 class="font-medium text-sm text-gray-600 dark:text-gray-300 mb-2">Popular Skills Suggestions:</h4>
       <div class="flex flex-wrap gap-2">
         <button 
           v-for="suggestion in popularSkills" 
           :key="suggestion"
           @click="addSuggestedSkill(suggestion)"
-          class="text-xs bg-white px-3 py-1 rounded-full border border-gray-300 hover:border-indigo-400 hover:bg-indigo-50 transition"
+          class="text-xs bg-white dark:bg-gray-700 px-3 py-1 rounded-full border border-gray-300 dark:border-gray-600 
+                 text-gray-700 dark:text-gray-200 
+                 hover:border-indigo-400 dark:hover:border-indigo-500 
+                 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 
+                 transition"
         >
           {{ suggestion }}
         </button>
