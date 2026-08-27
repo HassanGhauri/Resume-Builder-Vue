@@ -1,11 +1,17 @@
-<script setup lang="ts"></script>
-
+<!-- src/App.vue -->
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <div id="app" class="min-h-screen bg-gray-50">
+    <AppHeader />
+    <main class="container mx-auto px-4 py-8">
+      <router-view />
+    </main>
+    <AppFooter />
+  </div>
 </template>
+
+<script setup>
+import AppHeader from './components/common/AppHeader.vue'
+import AppFooter from './components/common/AppFooter.vue'
+</script>
 
 <style scoped></style>
