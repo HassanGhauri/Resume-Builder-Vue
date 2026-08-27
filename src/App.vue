@@ -1,6 +1,6 @@
 <!-- src/App.vue -->
 <template>
-  <div id="app" class="min-h-screen bg-gray-50">
+  <div id="app" class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
     <AppHeader />
     <main class="container mx-auto px-4 py-8">
       <router-view />
