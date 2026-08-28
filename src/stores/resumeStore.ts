@@ -31,7 +31,8 @@ export const useResumeStore = defineStore('resume', {
       fontSize: 'medium'
     }),
     currentStep: 1,
-    isSaving: false
+    isSaving: false,
+    hasPreviewed: useStorage('resume-previewed', false)
   }),
 
   actions: {
@@ -117,6 +118,10 @@ export const useResumeStore = defineStore('resume', {
       }
     },
 
+    markPreviewed() {
+      this.hasPreviewed = true
+    },
+
     nextStep() {
       if (this.currentStep < 6) {
         this.currentStep++
@@ -139,6 +144,16 @@ export const useResumeStore = defineStore('resume', {
         skills: { technical: [], soft: [], languages: [] },
         projects: []
       }
+      this.activeTemplate = 'modern'
+      this.templateSettings = { primaryColor: '#4F46E5', fontFamily: 'Inter', fontSize: 'medium' }
+      this.currentStep = 1
+      this.hasPreviewed = false
+
+      // Clear resume-related data from localStorage (theme is preserved)
+      localStorage.removeItem('resume-data')
+      localStorage.removeItem('active-template')
+      localStorage.removeItem('template-settings')
+      localStorage.removeItem('resume-previewed')
     }
   },
 
@@ -170,7 +185,17 @@ export const useResumeStore = defineStore('resume', {
       if (state.data.projects.length > 0) total++
       if (state.data.projects.length > 0) filled++
       
-      return Math.round((filled / total) * 100) || 0
+      const percentage = Math.round((filled / total) * 100) || 0
+
+      // Once the user has previewed the resume and all sections are filled,
+      // the progress bar should read 100%
+      const allSectionsComplete = state.data.experience.length > 0 &&
+        state.data.education.length > 0 &&
+        allSkills.length > 0 &&
+        state.data.projects.length > 0 &&
+        `${state.data.personal.firstName} ${state.data.personal.lastName}`.trim() !== ''
+
+      return (state.hasPreviewed && allSectionsComplete) ? 100 : percentage
     }
   }
 })

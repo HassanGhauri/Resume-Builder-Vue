@@ -32,14 +32,27 @@
           </div>
           
           <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <span>Completion</span>
-              <span>{{ store.completionPercentage }}%</span>
-            </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div class="bg-indigo-600 dark:bg-indigo-500 rounded-full h-2 transition-all duration-500"
-                :style="{ width: store.completionPercentage + '%' }"
-              ></div>
+            <button 
+              @click="clearProgress" 
+              class="flex items-center space-x-2 text-sm font-medium text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition py-1"
+              title="Clear all resume data"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              <span>Clear Progress</span>
+            </button>
+
+            <div class="mt-4">
+              <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+                <span>Completion</span>
+                <span>{{ store.completionPercentage }}%</span>
+              </div>
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div class="bg-indigo-600 dark:bg-indigo-500 rounded-full h-2 transition-all duration-500"
+                  :style="{ width: store.completionPercentage + '%' }"
+                ></div>
+              </div>
             </div>
           </div>
         </div>
@@ -87,6 +100,7 @@
             <router-link 
               v-if="store.currentStep === 6"
               to="/preview"
+              @click="store.markPreviewed()"
               class="btn-primary ml-auto"
             >
               Preview Resume 🎯
@@ -109,4 +123,10 @@ import ProjectsForm from '../components/builder/ProjectsForm.vue'
 
 const store = useResumeStore()
 const steps = ['Choose Template', 'Personal Info', 'Experience', 'Education', 'Skills', 'Projects']
+
+const clearProgress = () => {
+  if (confirm('Clear all resume data? This action cannot be undone.')) {
+    store.resetResume()
+  }
+}
 </script>

@@ -20,9 +20,6 @@
         <span v-if="store.isSaving" class="text-sm text-gray-500 dark:text-gray-400">
           <span class="inline-block animate-pulse">Saving...</span>
         </span>
-        <span class="text-sm text-gray-600 dark:text-gray-400">
-          {{ store.completionPercentage }}% complete
-        </span>
         <button 
           @click="toggleDarkMode" 
           class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
