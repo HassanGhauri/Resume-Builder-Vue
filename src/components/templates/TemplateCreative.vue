@@ -1,7 +1,7 @@
 <!-- src/components/templates/TemplateCreative.vue -->
 <template>
   <div class="template-creative" :style="styles">
-    <div class="flex flex-col md:flex-row gap-4 md:gap-6">
+    <div class="flex flex-col md:flex-row gap-4 md:gap-6" :style="contentStyles">
       <!-- Main Content (Left) -->
       <div class="md:w-2/3 order-2 md:order-1">
         <!-- Header -->
@@ -144,16 +144,25 @@ const allSkills = computed(() => {
 
 const hasSkills = computed(() => allSkills.value.length > 0)
 
-const fontSizeMap = { small: '0.75rem', medium: '0.875rem', large: '1rem' }
+const fontSizeMap = { small: '0.7rem', medium: '0.8rem', large: '0.9rem' }
 
 const styles = computed(() => ({
   fontFamily: props.fontFamily || 'Inter',
-  fontSize: fontSizeMap[props.fontSize] || '0.875rem',
+  fontSize: fontSizeMap[props.fontSize] || '0.8rem',
   padding: props.isPreview ? '0.5rem' : '1.5rem',
   backgroundColor: '#ffffff',
-  borderRadius: '12px',
+  borderRadius: props.isPreview ? '4px' : '12px',
   lineHeight: '1.5',
   wordWrap: 'break-word',
-  overflowWrap: 'break-word'
+  overflowWrap: 'break-word',
+  width: '100%',
+  maxWidth: '210mm',
+  margin: '0 auto',
+  boxSizing: 'border-box'
+}))
+
+const contentStyles = computed(() => ({
+  minHeight: props.isPreview ? 'auto' : '297mm',
+  padding: props.isPreview ? '0' : '0.5rem'
 }))
 </script>

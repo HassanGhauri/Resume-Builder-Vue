@@ -1,7 +1,7 @@
 <!-- src/components/templates/TemplateMinimal.vue -->
 <template>
   <div class="template-minimal" :style="styles">
-    <div class="max-w-2xl mx-auto">
+    <div class="max-w-2xl mx-auto" :style="contentStyles">
       <!-- Header -->
       <div class="mb-6">
         <h1 class="text-2xl md:text-3xl font-light tracking-wide" :style="{ color: textColor }">{{ fullName }}</h1>
@@ -113,17 +113,26 @@ const hasSkills = computed(() => {
   return props.skills?.technical?.length > 0 || props.skills?.soft?.length > 0
 })
 
-const fontSizeMap = { small: '0.75rem', medium: '0.875rem', large: '1rem' }
+const fontSizeMap = { small: '0.7rem', medium: '0.8rem', large: '0.9rem' }
 
 const styles = computed(() => ({
   fontFamily: props.fontFamily || 'Inter',
-  fontSize: fontSizeMap[props.fontSize] || '0.875rem',
+  fontSize: fontSizeMap[props.fontSize] || '0.8rem',
   padding: props.isPreview ? '0.5rem' : '2.5rem',
   backgroundColor: '#ffffff',
-  borderRadius: '4px',
+  borderRadius: props.isPreview ? '4px' : '4px',
   letterSpacing: '0.3px',
   lineHeight: '1.6',
   wordWrap: 'break-word',
-  overflowWrap: 'break-word'
+  overflowWrap: 'break-word',
+  width: '100%',
+  maxWidth: '210mm',
+  margin: '0 auto',
+  boxSizing: 'border-box'
+}))
+
+const contentStyles = computed(() => ({
+  minHeight: props.isPreview ? 'auto' : '297mm',
+  padding: props.isPreview ? '0' : '0.5rem'
 }))
 </script>

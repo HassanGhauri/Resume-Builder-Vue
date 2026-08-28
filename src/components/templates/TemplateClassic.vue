@@ -1,9 +1,9 @@
 <!-- src/components/templates/TemplateClassic.vue -->
 <template>
   <div class="template-classic" :style="styles">
-    <div class="max-w-3xl mx-auto">
+    <div class="max-w-3xl mx-auto" :style="contentStyles">
       <!-- Header -->
-      <div class="text-center border-b-2 pb-3 mb-4" :style="{ borderColor: primaryColor }">
+      <div class="text-center  pb-3 mb-4" :style="{ borderColor: primaryColor }">
         <h1 class="text-2xl md:text-3xl font-bold" :style="{ color: textColor }">{{ fullName }}</h1>
         <div class="flex flex-wrap justify-center gap-2 text-xs md:text-sm mt-1" :style="{ color: mutedTextColor }">
           <span v-if="personal.email" class="break-all">{{ personal.email }}</span>
@@ -14,7 +14,6 @@
           <span v-if="personal.linkedin" class="break-all">🔗 {{ personal.linkedin }}</span>
           <span v-if="personal.portfolio" class="break-all">🌐 {{ personal.portfolio }}</span>
         </div>
-        <p class="text-sm mt-2" :style="{ color: textColor }">{{ personal.summary }}</p>
       </div>
       
       <!-- Single Column Content -->
@@ -138,16 +137,25 @@ const hasSkills = computed(() => {
   return props.skills?.technical?.length > 0 || props.skills?.soft?.length > 0
 })
 
-const fontSizeMap = { small: '0.75rem', medium: '0.875rem', large: '1rem' }
+const fontSizeMap = { small: '0.7rem', medium: '0.8rem', large: '0.9rem' }
 
 const styles = computed(() => ({
   fontFamily: props.fontFamily || 'Inter',
-  fontSize: fontSizeMap[props.fontSize] || '0.875rem',
+  fontSize: fontSizeMap[props.fontSize] || '0.8rem',
   padding: props.isPreview ? '0.5rem' : '2rem',
-  backgroundColor: '#fafafa',
-  borderRadius: '4px',
+  backgroundColor: '#ffffff', // Changed from #fafafa to #ffffff (white)
+  borderRadius: props.isPreview ? '4px' : '4px',
   lineHeight: '1.5',
   wordWrap: 'break-word',
-  overflowWrap: 'break-word'
+  overflowWrap: 'break-word',
+  width: '100%',
+  maxWidth: '210mm',
+  margin: '0 auto',
+  boxSizing: 'border-box'
+}))
+
+const contentStyles = computed(() => ({
+  minHeight: props.isPreview ? 'auto' : '297mm',
+  padding: props.isPreview ? '0' : '1rem'
 }))
 </script>
