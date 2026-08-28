@@ -39,23 +39,14 @@
             ✓ Selected
           </div>
           
-          <!-- Preview PDF Button - Eye Icon with Loading State -->
+          <!-- Preview Button - Eye Icon -->
           <button 
             @click.stop="previewTemplate(template.id)"
             class="absolute bottom-2 right-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-1.5 rounded-full shadow-md hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition z-10 group"
-            :class="{ 'pointer-events-none opacity-50': loadingTemplate === template.id }"
-            :title="loadingTemplate === template.id ? 'Generating PDF...' : 'Preview as PDF'"
+            title="Preview"
           >
-            <!-- Loading Spinner -->
-            <svg v-if="loadingTemplate === template.id" 
-                 class="w-4 h-4 text-indigo-600 dark:text-indigo-400 animate-spin" 
-                 fill="none" 
-                 viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
             <!-- Eye Icon -->
-            <svg v-else class="w-4 h-4 text-gray-600 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-gray-600 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
@@ -83,21 +74,6 @@
                 Select
               </button>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Loading Overlay (Optional - shows when any template is loading) -->
-    <div v-if="loadingTemplate" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div class="bg-white dark:bg-gray-800 rounded-xl p-8 max-w-sm w-full mx-4 shadow-2xl">
-        <div class="text-center">
-          <!-- Spinner -->
-          <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-indigo-600 border-t-transparent"></div>
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-4">Generating PDF Preview</h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Please wait while we prepare your template...</p>
-          <div class="mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
-            <div class="bg-indigo-600 h-1.5 rounded-full animate-pulse" style="width: 100%;"></div>
           </div>
         </div>
       </div>
@@ -156,17 +132,61 @@
         </p>
       </div>
     </div>
+
+    <!-- Template Preview Modal -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div v-if="previewingTemplate" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60" @click.self="closePreview">
+          <div class="modal-content bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
+              <div>
+                <h3 class="font-semibold text-gray-900 dark:text-white">Template Preview</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Showing sample data</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button
+                  @click="selectTemplate(previewingTemplate)"
+                  class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-lg transition"
+                >
+                  Select Template
+                </button>
+                <button
+                  @click="closePreview"
+                  class="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-300 transition"
+                  title="Close"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="flex-1 overflow-auto p-4" :style="previewContainerStyles">
+              <component
+                :is="previewComponent"
+                :personal="sampleData.personal"
+                :experience="sampleData.experience"
+                :education="sampleData.education"
+                :skills="sampleData.skills"
+                :projects="sampleData.projects"
+                :full-name="sampleData.fullName"
+                :primary-color="store.templateSettings.primaryColor"
+                :font-family="store.templateSettings.fontFamily"
+                :font-size="store.templateSettings.fontSize"
+              />
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useResumeStore } from '../../stores/resumeStore'
-import { createApp, h } from 'vue'
-import html2canvas from 'html2canvas'
-import jsPDF from 'jspdf'
 
-// Import all template components for PDF preview
+// Template components for the preview modal
 import TemplateModern from './TemplateModern.vue'
 import TemplateClassic from './TemplateClassic.vue'
 import TemplateCreative from './TemplateCreative.vue'
@@ -175,9 +195,9 @@ import TemplateExecutive from './TemplateExecutive.vue'
 import TemplateTech from './TemplateTech.vue'
 
 const store = useResumeStore()
-const loadingTemplate = ref(null)
+const previewingTemplate = ref(null)
 
-// Sample data for PDF preview
+// Sample data for the preview modal
 const sampleData = {
   personal: {
     email: 'john@email.com',
@@ -186,23 +206,23 @@ const sampleData = {
     summary: 'Creative problem solver with 5+ years experience.'
   },
   experience: [
-    { 
-      id: 1, 
-      position: 'Senior Engineer', 
-      company: 'Tech Corp', 
-      startDate: '2020', 
-      endDate: 'Present', 
+    {
+      id: 1,
+      position: 'Senior Engineer',
+      company: 'Tech Corp',
+      startDate: '2020',
+      endDate: 'Present',
       description: 'Building amazing products.'
     }
   ],
   education: [
-    { 
-      id: 1, 
-      institution: 'University of Tech', 
-      degree: 'BS', 
-      field: 'CS', 
-      startDate: '2016', 
-      endDate: '2020' 
+    {
+      id: 1,
+      institution: 'University of Tech',
+      degree: 'BS',
+      field: 'CS',
+      startDate: '2016',
+      endDate: '2020'
     }
   ],
   skills: {
@@ -211,11 +231,11 @@ const sampleData = {
     languages: ['English']
   },
   projects: [
-    { 
-      id: 1, 
-      name: 'Resume Builder', 
-      description: 'Vue.js app', 
-      technologies: ['Vue', 'Tailwind'] 
+    {
+      id: 1,
+      name: 'Resume Builder',
+      description: 'Vue.js app',
+      technologies: ['Vue', 'Tailwind']
     }
   ],
   fullName: 'John Doe'
@@ -284,8 +304,26 @@ const templates = [
   }
 ]
 
+const previewComponent = computed(() => {
+  const template = templates.find(t => t.id === previewingTemplate.value)
+  return template?.component || TemplateModern
+})
+
+// Wrapper background for the modal preview, matching the resume preview styling
+const previewContainerStyles = computed(() => {
+  switch (previewingTemplate.value) {
+    case 'creative':
+      return { padding: '0.5rem', background: 'linear-gradient(135deg, #f5f3ff, #ede9fe)' }
+    case 'tech':
+      return { padding: '0.5rem', background: '#0f172a' }
+    default:
+      return { padding: '0.5rem', background: '#e5e7eb' }
+  }
+})
+
 const selectTemplate = (templateId) => {
   store.setTemplate(templateId)
+  closePreview()
 }
 
 const updateColor = (color) => {
@@ -300,86 +338,25 @@ const updateSize = (size) => {
   store.updateTemplateSettings({ fontSize: size })
 }
 
-const previewTemplate = async (templateId) => {
-  // Find the template
-  const template = templates.find(t => t.id === templateId)
-  if (!template) return
-  
-  // Set loading state
-  loadingTemplate.value = templateId
-  
-  try {
-    // Create a temporary container to render the template for PDF
-    const container = document.createElement('div')
-    container.style.position = 'fixed'
-    container.style.left = '-9999px'
-    container.style.top = '0'
-    container.style.width = '800px'
-    container.style.backgroundColor = '#ffffff'
-    container.style.padding = '40px'
-    container.style.zIndex = '9999'
-    document.body.appendChild(container)
-    
-    // Create a temporary Vue app to render the template
-    const app = createApp({
-      render() {
-        return h(template.component, {
-          personal: sampleData.personal,
-          experience: sampleData.experience,
-          education: sampleData.education,
-          skills: sampleData.skills,
-          projects: sampleData.projects,
-          fullName: sampleData.fullName,
-          primaryColor: store.templateSettings.primaryColor,
-          fontFamily: store.templateSettings.fontFamily,
-          fontSize: 'medium'
-        })
-      }
-    })
-    app.mount(container)
-    
-    // Wait for render
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
-    const canvas = await html2canvas(container, {
-      scale: 2,
-      useCORS: true,
-      logging: false,
-      backgroundColor: '#ffffff',
-      width: container.scrollWidth,
-      height: container.scrollHeight,
-      windowWidth: container.scrollWidth,
-      windowHeight: container.scrollHeight
-    })
-    
-    const imgData = canvas.toDataURL('image/png')
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4'
-    })
-    
-    const pdfWidth = pdf.internal.pageSize.getWidth()
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width
-    
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
-    
-    // Open PDF in new tab
-    const pdfOutput = pdf.output('bloburl')
-    window.open(pdfOutput, '_blank')
-    
-    // Clean up
-    document.body.removeChild(container)
-    app.unmount()
-    
-  } catch (error) {
-    console.error('Error generating PDF preview:', error)
-    alert('There was an error generating the PDF preview. Please try again.')
-  } finally {
-    // Clear loading state
-    loadingTemplate.value = null
-  }
+const previewTemplate = (templateId) => {
+  if (!templates.some(t => t.id === templateId)) return
+  previewingTemplate.value = templateId
 }
+
+const closePreview = () => {
+  previewingTemplate.value = null
+}
+
+const onKeydown = (event) => {
+  if (event.key === 'Escape') closePreview()
+}
+
+watch(previewingTemplate, (val) => {
+  document.body.style.overflow = val ? 'hidden' : ''
+})
+
+onMounted(() => document.addEventListener('keydown', onKeydown))
+onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
 </script>
 
 <style scoped>
@@ -414,32 +391,25 @@ const previewTemplate = async (templateId) => {
   max-width: 100%;
 }
 
-/* Spinner animation */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Modal transition */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.2s ease;
 }
 
-.animate-spin {
-  animation: spin 1s linear infinite;
+.modal-enter-active .modal-content,
+.modal-leave-active .modal-content {
+  transition: transform 0.2s ease;
 }
 
-/* Pulse animation for loading bar */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
 }
 
-.animate-pulse {
-  animation: pulse 1.5s ease-in-out infinite;
+.modal-enter-from .modal-content,
+.modal-leave-to .modal-content {
+  transform: scale(0.95);
 }
 
 /* Responsive adjustments */
