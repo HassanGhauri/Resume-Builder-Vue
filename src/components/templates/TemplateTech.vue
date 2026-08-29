@@ -29,26 +29,9 @@
           <h3 class="text-xs font-semibold uppercase tracking-wider mb-2" :style="{ color: primaryColor }">
             Skills
           </h3>
-          <div class="space-y-2">
-            <div v-if="skills.technical.length">
-              <div class="flex flex-wrap gap-1">
-                <span v-for="skill in skills.technical" :key="skill"
-                      class="px-2 py-0.5 rounded text-xs"
-                      :style="{ backgroundColor: primaryColor + '30', color: primaryColor }">
-                  {{ skill }}
-                </span>
-              </div>
-            </div>
-            <div v-if="skills.soft.length">
-              <div class="flex flex-wrap gap-1">
-                <span v-for="skill in skills.soft" :key="skill"
-                      class="px-2 py-0.5 rounded text-xs"
-                      :style="{ backgroundColor: primaryColor + '30', color: primaryColor }">
-                  {{ skill }}
-                </span>
-              </div>
-            </div>
-          </div>
+          <ul class="list-disc list-inside text-xs" :style="{ color: primaryColor }">
+            <li v-for="skill in [...skills.technical, ...skills.soft]" :key="skill">{{ skill }}</li>
+          </ul>
         </div>
       </div>
       
@@ -111,13 +94,7 @@
           <div v-for="project in projects" :key="project.id" class="mb-3">
             <h4 class="font-semibold text-sm" :style="{ color: lightTextColor }">{{ project.name }}</h4>
             <p class="text-sm" :style="{ color: lightTextColor }">{{ project.description }}</p>
-            <div class="flex flex-wrap gap-1 mt-1">
-              <span v-for="tech in project.technologies" :key="tech"
-                    class="px-2 py-0.5 rounded text-xs"
-                    :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-                {{ tech }}
-              </span>
-            </div>
+            <p class="text-xs mt-1" :style="{ color: primaryColor }">{{ project.technologies.join(', ') }}</p>
           </div>
         </div>
       </div>
@@ -158,25 +135,26 @@ const hasSkills = computed(() => {
   return props.skills?.technical?.length > 0 || props.skills?.soft?.length > 0
 })
 
-const fontSizeMap = { small: '0.7rem', medium: '0.8rem', large: '0.9rem' }
+const fontSizeMap = { small: '0.72rem', medium: '0.9rem', large: '1.08rem' }
 
 const styles = computed(() => ({
   fontFamily: props.fontFamily || 'Inter',
-  fontSize: fontSizeMap[props.fontSize] || '0.8rem',
+  fontSize: fontSizeMap[props.fontSize] || '0.9rem',
   padding: props.isPreview ? '0.5rem' : '1.5rem',
   backgroundColor: '#ffffff', // White background for the whole template
   borderRadius: props.isPreview ? '4px' : '12px',
   lineHeight: '1.5',
   wordWrap: 'break-word',
   overflowWrap: 'break-word',
-  width: '100%',
-  maxWidth: '210mm',
+  width: '210mm',
+  maxWidth: '100%',
   margin: '0 auto',
   boxSizing: 'border-box'
 }))
 
 const contentStyles = computed(() => ({
-  minHeight: props.isPreview ? 'auto' : '297mm',
+  minHeight: 'auto',
+  height: 'auto',
   padding: props.isPreview ? '0' : '0.5rem'
 }))
 

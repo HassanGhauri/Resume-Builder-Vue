@@ -1,6 +1,16 @@
 <!-- src/components/preview/TemplateRenderer.vue -->
 <template>
-  <div class="template-renderer">
+  <div
+    class="template-renderer"
+    :style="{
+      '--resume-primary-color': primaryColor,
+      '--resume-font-family': fontFamily,
+      '--resume-font-size': fontSizeMap[fontSize] || '0.8rem',
+      color: '#1a1a1a',
+      fontFamily: fontFamily,
+      fontSize: fontSizeMap[fontSize] || '0.8rem'
+    }"
+  >
     <component 
       :is="currentTemplate"
       :personal="personal"
@@ -45,4 +55,9 @@ const fullName = computed(() => store.fullName)
 const primaryColor = computed(() => store.templateSettings.primaryColor)
 const fontFamily = computed(() => store.templateSettings.fontFamily)
 const fontSize = computed(() => store.templateSettings.fontSize)
+const fontSizeMap = {
+  small: '0.72rem',
+  medium: '0.9rem',
+  large: '1.08rem'
+}
 </script>

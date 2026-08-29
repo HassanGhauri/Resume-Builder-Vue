@@ -57,17 +57,9 @@
         <!-- Skills -->
         <div v-if="hasSkills">
           <h2 class="text-xs font-medium uppercase tracking-wider" :style="{ color: primaryColor }">Skills</h2>
-          <div class="mt-1 space-y-1">
-            <div v-if="skills.technical.length">
-              <div class="flex flex-wrap gap-1">
-                <span v-for="skill in skills.technical" :key="skill"
-                      class="px-2 py-0.5 rounded text-xs"
-                      :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-                  {{ skill }}
-                </span>
-              </div>
-            </div>
-          </div>
+          <ul class="list-disc list-inside text-xs mt-1" :style="{ color: primaryColor }">
+            <li v-for="skill in skills.technical" :key="skill">{{ skill }}</li>
+          </ul>
         </div>
         
         <!-- Projects -->
@@ -76,13 +68,7 @@
           <div v-for="project in projects" :key="project.id" class="mt-2">
             <h3 class="font-medium text-sm" :style="{ color: textColor }">{{ project.name }}</h3>
             <p class="text-sm" :style="{ color: textColor }">{{ project.description }}</p>
-            <div class="flex flex-wrap gap-1 mt-1">
-              <span v-for="tech in project.technologies" :key="tech"
-                    class="px-2 py-0.5 rounded text-xs"
-                    :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-                {{ tech }}
-              </span>
-            </div>
+            <p class="text-xs mt-1" :style="{ color: primaryColor }">{{ project.technologies.join(', ') }}</p>
           </div>
         </div>
       </div>
@@ -113,11 +99,11 @@ const hasSkills = computed(() => {
   return props.skills?.technical?.length > 0 || props.skills?.soft?.length > 0
 })
 
-const fontSizeMap = { small: '0.7rem', medium: '0.8rem', large: '0.9rem' }
+const fontSizeMap = { small: '0.72rem', medium: '0.9rem', large: '1.08rem' }
 
 const styles = computed(() => ({
   fontFamily: props.fontFamily || 'Inter',
-  fontSize: fontSizeMap[props.fontSize] || '0.8rem',
+  fontSize: fontSizeMap[props.fontSize] || '0.9rem',
   padding: props.isPreview ? '0.5rem' : '2.5rem',
   backgroundColor: '#ffffff',
   borderRadius: props.isPreview ? '4px' : '4px',
@@ -125,14 +111,15 @@ const styles = computed(() => ({
   lineHeight: '1.6',
   wordWrap: 'break-word',
   overflowWrap: 'break-word',
-  width: '100%',
-  maxWidth: '210mm',
+  width: '210mm',
+  maxWidth: '100%',
   margin: '0 auto',
   boxSizing: 'border-box'
 }))
 
 const contentStyles = computed(() => ({
-  minHeight: props.isPreview ? 'auto' : '297mm',
+  minHeight: 'auto',
+  height: 'auto',
   padding: props.isPreview ? '0' : '0.5rem'
 }))
 </script>

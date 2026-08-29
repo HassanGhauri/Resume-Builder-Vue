@@ -4,7 +4,7 @@
     <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
       <div class="flex items-center space-x-4">
         <router-link to="/" class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-          Resume<span class="text-gray-800 dark:text-gray-200">Builder</span>
+          Crescent<span class="text-gray-800 dark:text-gray-200">Resume</span>
         </router-link>
         <div class="hidden md:flex space-x-4 ml-8">
           <router-link to="/builder" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">

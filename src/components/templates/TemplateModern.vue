@@ -6,14 +6,9 @@
       <div class="md:w-1/3">
         <!-- Profile -->
         <div class="text-center mb-4">
-          <div class="w-20 h-20 md:w-24 md:h-24 rounded-full mx-auto flex items-center justify-center text-xl md:text-2xl font-bold"
-               :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-            {{ initials }}
-          </div>
-          <h1 class="text-lg md:text-xl font-bold mt-2" :style="{ color: textColor }">
+          <h1 class="text-lg md:text-xl font-bold" :style="{ color: primaryColor }">
             {{ fullName }}
           </h1>
-          <p class="text-xs md:text-sm" :style="{ color: mutedTextColor }">{{ personal.summary }}</p>
         </div>
         
         <!-- Contact -->
@@ -30,7 +25,7 @@
           </div>
         </div>
         
-        <!-- Skills -->
+        <!-- Skills (Column-wise) -->
         <div v-if="hasSkills">
           <h3 class="text-xs font-semibold uppercase tracking-wider mb-2" :style="{ color: primaryColor }">
             Skills
@@ -38,32 +33,29 @@
           <div class="space-y-2">
             <div v-if="skills.technical.length">
               <p class="text-xs font-medium" :style="{ color: mutedTextColor }">Technical</p>
-              <div class="flex flex-wrap gap-1 mt-1">
-                <span v-for="skill in skills.technical" :key="skill"
-                      class="px-2 py-0.5 rounded text-xs"
-                      :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-                  {{ skill }}
-                </span>
+              <div class="text-xs mt-1" :style="{ color: primaryColor }">
+                <div v-for="skill in skills.technical" :key="skill" class="flex items-start gap-2 mb-1">
+                  <span class="inline-block leading-none pt-[0.15rem]">•</span>
+                  <span>{{ skill }}</span>
+                </div>
               </div>
             </div>
             <div v-if="skills.soft.length">
               <p class="text-xs font-medium" :style="{ color: mutedTextColor }">Soft Skills</p>
-              <div class="flex flex-wrap gap-1 mt-1">
-                <span v-for="skill in skills.soft" :key="skill"
-                      class="px-2 py-0.5 rounded text-xs"
-                      :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-                  {{ skill }}
-                </span>
+              <div class="text-xs mt-1" :style="{ color: primaryColor }">
+                <div v-for="skill in skills.soft" :key="skill" class="flex items-start gap-2 mb-1">
+                  <span class="inline-block leading-none pt-[0.15rem]">•</span>
+                  <span>{{ skill }}</span>
+                </div>
               </div>
             </div>
             <div v-if="skills.languages.length">
               <p class="text-xs font-medium" :style="{ color: mutedTextColor }">Languages</p>
-              <div class="flex flex-wrap gap-1 mt-1">
-                <span v-for="lang in skills.languages" :key="lang"
-                      class="px-2 py-0.5 rounded text-xs"
-                      :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-                  {{ lang }}
-                </span>
+              <div class="text-xs mt-1" :style="{ color: primaryColor }">
+                <div v-for="lang in skills.languages" :key="lang" class="flex items-start gap-2 mb-1">
+                  <span class="inline-block leading-none pt-[0.15rem]">•</span>
+                  <span>{{ lang }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -133,13 +125,7 @@
           <div v-for="project in projects" :key="project.id" class="mb-3">
             <h4 class="font-semibold text-sm" :style="{ color: textColor }">{{ project.name }}</h4>
             <p class="text-xs" :style="{ color: textColor }">{{ project.description }}</p>
-            <div class="flex flex-wrap gap-1 mt-1">
-              <span v-for="tech in project.technologies" :key="tech"
-                    class="px-2 py-0.5 rounded text-xs"
-                    :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-                {{ tech }}
-              </span>
-            </div>
+            <p class="text-xs mt-1" :style="{ color: primaryColor }">{{ project.technologies.join(', ') }}</p>
             <div v-if="project.link || project.github" class="flex gap-2 mt-1 text-xs">
               <a v-if="project.link" :href="project.link" target="_blank"
                  class="hover:underline" :style="{ color: primaryColor }">🔗 Live Demo</a>
@@ -183,26 +169,27 @@ const hasSkills = computed(() => {
          props.skills?.languages?.length > 0
 })
 
-const fontSizeMap = { small: '0.7rem', medium: '0.8rem', large: '0.9rem' }
+const fontSizeMap = { small: '0.72rem', medium: '0.9rem', large: '1.08rem' }
 
 // A4 size: 210mm x 297mm
 const styles = computed(() => ({
   fontFamily: props.fontFamily || 'Inter',
-  fontSize: fontSizeMap[props.fontSize] || '0.8rem',
+  fontSize: fontSizeMap[props.fontSize] || '0.9rem',
   padding: props.isPreview ? '0.5rem' : '1.5rem',
   backgroundColor: '#ffffff',
   borderRadius: props.isPreview ? '4px' : '12px',
   lineHeight: '1.5',
   wordWrap: 'break-word',
   overflowWrap: 'break-word',
-  width: '100%',
-  maxWidth: '210mm',
+  width: '210mm',
+  maxWidth: '100%',
   margin: '0 auto',
   boxSizing: 'border-box'
 }))
 
 const contentStyles = computed(() => ({
-  minHeight: props.isPreview ? 'auto' : '297mm',
+  minHeight: 'auto',
+  height: 'auto',
   padding: props.isPreview ? '0' : '0.5rem'
 }))
 </script>

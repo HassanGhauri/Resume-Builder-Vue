@@ -120,7 +120,7 @@
           <label class="form-label">Font Size</label>
           <select :value="store.templateSettings.fontSize" @change="updateSize($event.target.value)" class="form-input">
             <option value="small">Small</option>
-            <option value="medium">Medium</option>
+            <option value="medium">Regular</option>
             <option value="large">Large</option>
           </select>
         </div>
@@ -162,18 +162,30 @@
               </div>
             </div>
             <div class="flex-1 overflow-auto p-4" :style="previewContainerStyles">
-              <component
-                :is="previewComponent"
-                :personal="sampleData.personal"
-                :experience="sampleData.experience"
-                :education="sampleData.education"
-                :skills="sampleData.skills"
-                :projects="sampleData.projects"
-                :full-name="sampleData.fullName"
-                :primary-color="store.templateSettings.primaryColor"
-                :font-family="store.templateSettings.fontFamily"
-                :font-size="store.templateSettings.fontSize"
-              />
+              <div
+                :style="{
+                  fontFamily: store.templateSettings.fontFamily,
+                  fontSize: {
+                    small: '0.72rem',
+                    medium: '0.9rem',
+                    large: '1.08rem'
+                  }[store.templateSettings.fontSize] || '0.9rem',
+                  color: '#1a1a1a'
+                }"
+              >
+                <component
+                  :is="previewComponent"
+                  :personal="sampleData.personal"
+                  :experience="sampleData.experience"
+                  :education="sampleData.education"
+                  :skills="sampleData.skills"
+                  :projects="sampleData.projects"
+                  :full-name="sampleData.fullName"
+                  :primary-color="store.templateSettings.primaryColor"
+                  :font-family="store.templateSettings.fontFamily"
+                  :font-size="store.templateSettings.fontSize"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -233,7 +245,7 @@ const sampleData = {
   projects: [
     {
       id: 1,
-      name: 'Resume Builder',
+      name: 'CrescentResume',
       description: 'Vue.js app',
       technologies: ['Vue', 'Tailwind']
     }
