@@ -1,9 +1,9 @@
 <!-- src/components/templates/TemplateClassic.vue -->
 <template>
   <div class="template-classic" :style="styles">
-    <div class="max-w-3xl mx-auto">
+    <div class="max-w-3xl mx-auto" :style="contentStyles">
       <!-- Header -->
-      <div class="text-center border-b-2 pb-3 mb-4" :style="{ borderColor: primaryColor }">
+      <div class="text-center  pb-3 mb-4" :style="{ borderColor: primaryColor }">
         <h1 class="text-2xl md:text-3xl font-bold" :style="{ color: textColor }">{{ fullName }}</h1>
         <div class="flex flex-wrap justify-center gap-2 text-xs md:text-sm mt-1" :style="{ color: mutedTextColor }">
           <span v-if="personal.email" class="break-all">{{ personal.email }}</span>
@@ -14,7 +14,6 @@
           <span v-if="personal.linkedin" class="break-all">🔗 {{ personal.linkedin }}</span>
           <span v-if="personal.portfolio" class="break-all">🌐 {{ personal.portfolio }}</span>
         </div>
-        <p class="text-sm mt-2" :style="{ color: textColor }">{{ personal.summary }}</p>
       </div>
       
       <!-- Single Column Content -->
@@ -64,30 +63,44 @@
           </div>
         </div>
         
-        <!-- Skills -->
+        <!-- Skills (Two Column) -->
         <div v-if="hasSkills">
           <h2 class="text-base md:text-lg font-semibold border-b-2 pb-1" :style="{ borderColor: primaryColor, color: primaryColor }">
             Skills
           </h2>
-          <div class="mt-3 space-y-2">
+          <div class="mt-3 grid grid-cols-2 gap-6">
             <div v-if="skills.technical.length">
               <p class="font-medium text-sm" :style="{ color: textColor }">Technical</p>
-              <div class="flex flex-wrap gap-1 mt-1">
-                <span v-for="skill in skills.technical" :key="skill"
-                      class="px-2 py-0.5 rounded text-xs"
-                      :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-                  {{ skill }}
-                </span>
+              <div class="grid grid-cols-2 gap-x-6 mt-1">
+                <div class="text-sm leading-snug" :style="{ color: primaryColor }">
+                  <div v-for="skill in skills.technical.slice(0, 3)" :key="skill" class="flex items-start gap-2 mb-1">
+                    <span class="inline-block leading-none pt-[0.15rem]">•</span>
+                    <span>{{ skill }}</span>
+                  </div>
+                </div>
+                <div v-if="skills.technical.length > 3" class="text-sm leading-snug" :style="{ color: primaryColor }">
+                  <div v-for="skill in skills.technical.slice(3)" :key="skill" class="flex items-start gap-2 mb-1">
+                    <span class="inline-block leading-none pt-[0.15rem]">•</span>
+                    <span>{{ skill }}</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div v-if="skills.soft.length">
               <p class="font-medium text-sm" :style="{ color: textColor }">Soft Skills</p>
-              <div class="flex flex-wrap gap-1 mt-1">
-                <span v-for="skill in skills.soft" :key="skill"
-                      class="px-2 py-0.5 rounded text-xs"
-                      :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-                  {{ skill }}
-                </span>
+              <div class="grid grid-cols-2 gap-x-6 mt-1">
+                <div class="text-sm leading-snug" :style="{ color: primaryColor }">
+                  <div v-for="skill in skills.soft.slice(0, 3)" :key="skill" class="flex items-start gap-2 mb-1">
+                    <span class="inline-block leading-none pt-[0.15rem]">•</span>
+                    <span>{{ skill }}</span>
+                  </div>
+                </div>
+                <div v-if="skills.soft.length > 3" class="text-sm leading-snug" :style="{ color: primaryColor }">
+                  <div v-for="skill in skills.soft.slice(3)" :key="skill" class="flex items-start gap-2 mb-1">
+                    <span class="inline-block leading-none pt-[0.15rem]">•</span>
+                    <span>{{ skill }}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -101,13 +114,7 @@
           <div v-for="project in projects" :key="project.id" class="mt-3">
             <h3 class="font-bold text-sm md:text-base" :style="{ color: textColor }">{{ project.name }}</h3>
             <p class="text-sm" :style="{ color: textColor }">{{ project.description }}</p>
-            <div class="flex flex-wrap gap-1 mt-1">
-              <span v-for="tech in project.technologies" :key="tech"
-                    class="px-2 py-0.5 rounded text-xs"
-                    :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-                {{ tech }}
-              </span>
-            </div>
+            <p class="text-sm mt-1" :style="{ color: primaryColor }">{{ project.technologies.join(', ') }}</p>
           </div>
         </div>
       </div>
@@ -138,16 +145,26 @@ const hasSkills = computed(() => {
   return props.skills?.technical?.length > 0 || props.skills?.soft?.length > 0
 })
 
-const fontSizeMap = { small: '0.75rem', medium: '0.875rem', large: '1rem' }
+const fontSizeMap = { small: '0.72rem', medium: '0.9rem', large: '1.08rem' }
 
 const styles = computed(() => ({
   fontFamily: props.fontFamily || 'Inter',
-  fontSize: fontSizeMap[props.fontSize] || '0.875rem',
+  fontSize: fontSizeMap[props.fontSize] || '0.9rem',
   padding: props.isPreview ? '0.5rem' : '2rem',
-  backgroundColor: '#fafafa',
-  borderRadius: '4px',
+  backgroundColor: '#ffffff', // Changed from #fafafa to #ffffff (white)
+  borderRadius: props.isPreview ? '4px' : '4px',
   lineHeight: '1.5',
   wordWrap: 'break-word',
-  overflowWrap: 'break-word'
+  overflowWrap: 'break-word',
+  width: '210mm',
+  maxWidth: '100%',
+  margin: '0 auto',
+  boxSizing: 'border-box'
+}))
+
+const contentStyles = computed(() => ({
+  minHeight: 'auto',
+  height: 'auto',
+  padding: props.isPreview ? '0' : '1rem'
 }))
 </script>

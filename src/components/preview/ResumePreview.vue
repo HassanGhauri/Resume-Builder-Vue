@@ -1,6 +1,6 @@
 <!-- src/components/preview/ResumePreview.vue -->
 <template>
-  <div id="resume-content" class="rounded-xl shadow-lg overflow-hidden print:shadow-none" :style="containerStyles">
+  <div id="resume-content" :style="containerStyles">
     <!-- Loading State -->
     <div v-if="!hasData" class="text-center py-16" :style="{ backgroundColor: '#ffffff' }">
       <span class="text-6xl mb-4 block">📄</span>
@@ -26,13 +26,15 @@ const store = useResumeStore()
 const hasData = computed(() => store.hasData)
 
 const containerStyles = computed(() => {
-  switch(store.activeTemplate) {
-    case 'creative':
-      return { padding: '0.5rem', background: 'linear-gradient(135deg, #f5f3ff, #ede9fe)' }
-    case 'tech':
-      return { padding: '0.5rem', background: '#0f172a' }
-    default:
-      return { padding: '0.5rem', background: '#e5e7eb' }
+  return { 
+    background: '#ffffff',
+    padding: '0',
+    margin: '0',
+    boxSizing: 'border-box',
+    width: '210mm',
+    maxWidth: '100%',
+    marginLeft: 'auto',
+    marginRight: 'auto'
   }
 })
 </script>

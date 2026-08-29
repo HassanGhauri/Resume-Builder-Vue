@@ -1,7 +1,7 @@
 <!-- src/components/templates/TemplateExecutive.vue -->
 <template>
   <div class="template-executive" :style="styles">
-    <div class="flex gap-4 md:gap-6">
+    <div class="flex gap-4 md:gap-6" :style="contentStyles">
       <!-- Left Accent Bar -->
       <div class="w-1 flex-shrink-0" :style="{ backgroundColor: primaryColor }"></div>
       
@@ -66,18 +66,14 @@
           </div>
         </div>
         
-        <!-- Skills -->
+        <!-- Skills (Column-wise) -->
         <div v-if="hasSkills" class="mb-4">
           <h2 class="text-xs font-semibold uppercase tracking-wider mb-1" :style="{ color: primaryColor }">
             Skills
           </h2>
-          <div class="flex flex-wrap gap-1">
-            <span v-for="skill in allSkills" :key="skill"
-                  class="px-2 py-0.5 rounded text-xs"
-                  :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-              {{ skill }}
-            </span>
-          </div>
+          <ul class="list-disc list-inside text-xs mt-1" :style="{ color: primaryColor }">
+            <li v-for="skill in allSkills" :key="skill">{{ skill }}</li>
+          </ul>
         </div>
         
         <!-- Projects -->
@@ -88,13 +84,7 @@
           <div v-for="project in projects" :key="project.id" class="mb-2">
             <h3 class="font-bold text-sm" :style="{ color: textColor }">{{ project.name }}</h3>
             <p class="text-sm" :style="{ color: textColor }">{{ project.description }}</p>
-            <div class="flex flex-wrap gap-1 mt-1">
-              <span v-for="tech in project.technologies" :key="tech"
-                    class="px-2 py-0.5 rounded text-xs"
-                    :style="{ backgroundColor: primaryColor + '20', color: primaryColor }">
-                {{ tech }}
-              </span>
-            </div>
+            <p class="text-sm mt-1" :style="{ color: primaryColor }">{{ project.technologies.join(', ') }}</p>
           </div>
         </div>
       </div>
@@ -127,16 +117,26 @@ const allSkills = computed(() => {
 
 const hasSkills = computed(() => allSkills.value.length > 0)
 
-const fontSizeMap = { small: '0.75rem', medium: '0.875rem', large: '1rem' }
+const fontSizeMap = { small: '0.72rem', medium: '0.9rem', large: '1.08rem' }
 
 const styles = computed(() => ({
   fontFamily: props.fontFamily || 'Inter',
-  fontSize: fontSizeMap[props.fontSize] || '0.875rem',
+  fontSize: fontSizeMap[props.fontSize] || '0.9rem',
   padding: props.isPreview ? '0.5rem' : '2rem',
-  backgroundColor: '#f8fafc',
-  borderRadius: '4px',
+  backgroundColor: '#ffffff', // Changed from '#f8fafc' to '#ffffff' (white)
+  borderRadius: props.isPreview ? '4px' : '4px',
   lineHeight: '1.5',
   wordWrap: 'break-word',
-  overflowWrap: 'break-word'
+  overflowWrap: 'break-word',
+  width: '210mm',
+  maxWidth: '100%',
+  margin: '0 auto',
+  boxSizing: 'border-box'
+}))
+
+const contentStyles = computed(() => ({
+  minHeight: 'auto',
+  height: 'auto',
+  padding: props.isPreview ? '0' : '0.5rem'
 }))
 </script>
